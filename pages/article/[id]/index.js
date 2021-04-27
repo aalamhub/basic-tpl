@@ -19,6 +19,7 @@ const article = ({ article }) => {
 }
 
 export const getStaticProps = async (context) => {
+  console.log(context, 'css')
   const res = await fetch(`${server}/api/articles/${context.params.id}`)
 
   const article = await res.json()
@@ -37,7 +38,7 @@ export const getStaticPaths = async () => {
 
   const ids = articles.map((article) => article.id)
   const paths = ids.map((id) => ({ params: { id: id.toString() } }))
-
+console.log("test path------>",paths)
   return {
     paths,
     fallback: false,

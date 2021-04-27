@@ -1,8 +1,10 @@
 import { server } from '../config';
 import ArticleList from '../components/ArticleList';
+import Common from '../components/Template/Common/ArticleList'
+import LightTemplate from '../components/Template/LightTemplate/ArticleList'
 const CONTENT_API_KEY = 'e1e7e4d65a73863e962f043466';
 const BLOG_URL = 'https://squapl-cms.herokuapp.com';
-import Link from 'next/link';
+// import Link from 'next/link';
 
 type Post = {
 	title: string;
@@ -13,12 +15,15 @@ async function getPosts() {
 	// curl ""
 	debugger;
 	const res = await fetch(
-		`${BLOG_URL}/ghost/api/v3/content/posts/?key=${CONTENT_API_KEY}&fields=title,slug,custom_excerpt`
+		`${BLOG_URL}/ghost/api/v3/content/posts/?key=${CONTENT_API_KEY}&include=tags,authors`
+
+		// `${BLOG_URL}/ghost/api/v3/content/posts/?key=${CONTENT_API_KEY}&fields=title,slug,custom_excerpt,excerpt,updated_at,feature_image`
+
 	).then((res) => res.json());
 
 	const articles = res.posts;
 	debugger;
-	console.log('dinesh da ' + JSON.stringify(articles));
+	//console.log('dinesh da ' + JSON.stringify(articles));
 	return articles;
 }
 
@@ -40,10 +45,16 @@ export const getStaticProps = async ({ params }) => {
 // }
 const Home: React.FC<{ articles: Post[] }> = (props) => {
 	const { articles } = props;
+	let template="light"
 	return (
 		<div>
 			<h1>Hello to my blog</h1>
-			<ArticleList articles={articles} />
+			{template && template === "common" ? (
+				<Common articles={articles } />
+			):
+			((template && template === "light") ? <LightTemplate articles={articles} />
+			:
+			<ArticleList articles={articles} />)}
 			{/* <ul>
 				{articles.map((post, index) => {
 					return (
@@ -90,3 +101,4 @@ export default Home;
 //     },
 //   }
 // }
+
